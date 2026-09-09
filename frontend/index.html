@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Medicine Reminder - Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #d7f0f7, #e3f7e8);
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-card {
+            width: 90%;
+            max-width: 450px;
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.12);
+        }
+        .logo {
+            font-size: 45px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        h2 {
+            text-align: center;
+            font-weight: 600;
+            color: #222;
+        }
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+        }
+        .form-label {
+            font-weight: 500;
+        }
+        .btn-login {
+            width: 100%;
+            background: #198754;
+            border: none;
+            padding: 11px;
+            font-weight: 500;
+        }
+        .btn-login:hover {
+            background: #157347;
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #message {
+            display: none;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <div class="logo">💊</div>
+
+    <h2>Smart Medicine Reminder</h2>
+
+    <p class="subtitle">
+        Login to manage your medicines
+    </p>
+
+    <form id="loginForm">
+
+        <div class="mb-3">
+            <label for="role" class="form-label">Login As</label>
+            <select id="role" class="form-select" required>
+                <option value="">Select Role</option>
+                <option value="Patient">Patient</option>
+                <option value="Caretaker">Caretaker</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input
+                type="email"
+                id="email"
+                class="form-control"
+                placeholder="Enter your email"
+                required
+            >
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input
+                type="password"
+                id="password"
+                class="form-control"
+                placeholder="Enter your password"
+                required
+            >
+        </div>
+
+        <button type="submit" class="btn btn-success btn-login">
+            Login
+        </button>
+
+        <div id="message" class="alert"></div>
+
+    </form>
+
+    <div class="register-link">
+        <span>Don't have an account?</span>
+        <a href="register.html">Register here</a>
+    </div>
+</div>
+
+<script src="js/login.js"></script>
+
+</body>
+</html>

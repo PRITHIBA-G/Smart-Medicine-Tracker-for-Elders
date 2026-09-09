@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Medicine Reminder - Register</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #d7f0f7, #e3f7e8);
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            padding: 40px 0;
+        }
+        .register-card {
+            width: 90%;
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.12);
+        }
+        .logo {
+            font-size: 42px;
+            text-align: center;
+        }
+        h2 {
+            text-align: center;
+            font-weight: 600;
+            color: #222;
+        }
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-weight: 600;
+            color: #198754;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+        .form-label {
+            font-weight: 500;
+        }
+        .btn-register {
+            background: #198754;
+            border: none;
+            padding: 11px;
+            font-weight: 500;
+        }
+        .btn-register:hover {
+            background: #157347;
+        }
+        #message {
+            display: none;
+            margin-top: 15px;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-card">
+
+    <div class="logo">💊</div>
+
+    <h2>Create Account</h2>
+
+    <p class="subtitle">
+        Register as a patient with your caretaker details
+    </p>
+
+    <form id="registerForm">
+
+        <h5 class="section-title">👤 Patient Details</h5>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label for="name" class="form-label">Patient Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    class="form-control"
+                    placeholder="Enter patient name"
+                    required
+                >
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="email" class="form-label">Patient Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    class="form-control"
+                    placeholder="Enter patient email"
+                    required
+                >
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="phone" class="form-label">Patient Phone</label>
+                <input
+                    type="tel"
+                    id="phone"
+                    class="form-control"
+                    placeholder="Enter patient phone"
+                    required
+                >
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    class="form-control"
+                    placeholder="Create password"
+                    required
+                >
+            </div>
+
+        </div>
+
+        <h5 class="section-title mt-3">👨‍⚕️ Caretaker Details</h5>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label for="caretaker_name" class="form-label">
+                    Caretaker Name
+                </label>
+                <input
+                    type="text"
+                    id="caretaker_name"
+                    class="form-control"
+                    placeholder="Enter caretaker name"
+                    required
+                >
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="caretaker_email" class="form-label">
+                    Caretaker Email
+                </label>
+                <input
+                    type="email"
+                    id="caretaker_email"
+                    class="form-control"
+                    placeholder="Enter caretaker email"
+                    required
+                >
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="caretaker_phone" class="form-label">
+                    Caretaker Phone
+                </label>
+                <input
+                    type="tel"
+                    id="caretaker_phone"
+                    class="form-control"
+                    placeholder="Enter caretaker phone"
+                    required
+                >
+            </div>
+
+        </div>
+
+        <button
+            type="submit"
+            class="btn btn-success btn-register w-100 mt-2"
+        >
+            Create Account
+        </button>
+
+        <div id="message" class="alert"></div>
+
+    </form>
+
+    <div class="login-link">
+        <span>Already have an account?</span>
+        <a href="index.html">Login here</a>
+    </div>
+
+</div>
+
+<script src="js/register.js"></script>
+
+</body>
+</html>
