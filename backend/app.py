@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request
 from flask_cors import CORS
 from pymongo import MongoClient
@@ -5,20 +6,27 @@ from bson import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-client = MongoClient("mongodb://localhost:27017/")
+mongo_uri = os.getenv("MONGO_URI")
+client = MongoClient(mongo_uri)
+
 db = client["smart_medicine"]
 
 patients_collection = db["patients"]
 caretakers_collection = db["caretakers"]
 medicines_collection = db["medicines"]
 
+
 @app.route("/")
 def home():
     return "Smart Medicine Reminder Backend is Working!"
+
 
 @app.route("/api/register", methods=["POST"])
 def register():
@@ -78,6 +86,7 @@ def register():
         "caretaker_id": caretaker_id
     }, 201
 
+
 @app.route("/api/login", methods=["POST"])
 def login():
     data = request.json
@@ -93,6 +102,7 @@ def login():
 
     if role == "Patient":
         user = patients_collection.find_one({"email": email})
+
         if not user or not check_password_hash(user["password"], password):
             return {"message": "Invalid patient email or password"}, 401
 
@@ -110,6 +120,7 @@ def login():
 
     if role == "Caretaker":
         user = caretakers_collection.find_one({"email": email})
+
         if not user or not check_password_hash(user["password"], password):
             return {"message": "Invalid caretaker email or password"}, 401
 
@@ -127,6 +138,7 @@ def login():
 
     return {"message": "Invalid role"}, 400
 
+
 @app.route("/api/medicines", methods=["POST"])
 def add_medicine():
     data = request.json
@@ -140,7 +152,9 @@ def add_medicine():
     time_of_day = data.get("time_of_day")
 
     if not patient_id or not medicine_name or not dosage or not date or not time_of_day:
-        return {"message": "Please provide patient ID, medicine name, dosage, date and time"}, 400
+        return {
+            "message": "Please provide patient ID, medicine name, dosage, date and time"
+        }, 400
 
     try:
         patient = patients_collection.find_one({"_id": ObjectId(patient_id)})
@@ -168,6 +182,7 @@ def add_medicine():
         "id": str(result.inserted_id)
     }, 201
 
+
 @app.route("/api/caretaker/schedule", methods=["POST"])
 def caretaker_schedule():
     data = request.json
@@ -187,7 +202,9 @@ def caretaker_schedule():
         return {"message": "Medicine name, dosage, date and time are required"}, 400
 
     try:
-        caretaker = caretakers_collection.find_one({"_id": ObjectId(caretaker_id)})
+        caretaker = caretakers_collection.find_one(
+            {"_id": ObjectId(caretaker_id)}
+        )
     except Exception:
         return {"message": "Invalid caretaker ID"}, 400
 
@@ -200,7 +217,9 @@ def caretaker_schedule():
         return {"message": "No patient linked to this caretaker"}, 404
 
     try:
-        patient = patients_collection.find_one({"_id": ObjectId(patient_id)})
+        patient = patients_collection.find_one(
+            {"_id": ObjectId(patient_id)}
+        )
     except Exception:
         return {"message": "Invalid patient ID"}, 400
 
@@ -228,6 +247,7 @@ def caretaker_schedule():
         "id": str(result.inserted_id),
         "patient_name": patient.get("name", "")
     }, 201
+
 
 @app.route("/api/medicines/<patient_id>", methods=["GET"])
 def get_medicines(patient_id):
@@ -259,6 +279,7 @@ def get_medicines(patient_id):
 
     return result, 200
 
+
 @app.route("/api/medicines/<medicine_id>/taken", methods=["PUT"])
 def mark_taken(medicine_id):
     try:
@@ -275,6 +296,7 @@ def mark_taken(medicine_id):
         return {"message": "Medicine not found or already processed"}, 404
 
     return {"message": "Medicine marked as taken"}, 200
+
 
 @app.route("/api/medicines/<medicine_id>/missed", methods=["PUT"])
 def mark_missed(medicine_id):
@@ -293,6 +315,7 @@ def mark_missed(medicine_id):
 
     return {"message": "Medicine marked as missed"}, 200
 
+
 @app.route("/api/medicines/<medicine_id>", methods=["DELETE"])
 def delete_medicine(medicine_id):
     try:
@@ -307,10 +330,13 @@ def delete_medicine(medicine_id):
 
     return {"message": "Medicine removed successfully!"}, 200
 
+
 @app.route("/api/patients/<patient_id>", methods=["GET"])
 def get_patient(patient_id):
     try:
-        patient = patients_collection.find_one({"_id": ObjectId(patient_id)})
+        patient = patients_collection.find_one(
+            {"_id": ObjectId(patient_id)}
+        )
     except Exception:
         return {"message": "Invalid patient ID"}, 400
 
@@ -325,10 +351,13 @@ def get_patient(patient_id):
         "caretaker_id": patient.get("caretaker_id")
     }, 200
 
+
 @app.route("/api/caretakers/<caretaker_id>", methods=["GET"])
 def get_caretaker(caretaker_id):
     try:
-        caretaker = caretakers_collection.find_one({"_id": ObjectId(caretaker_id)})
+        caretaker = caretakers_collection.find_one(
+            {"_id": ObjectId(caretaker_id)}
+        )
     except Exception:
         return {"message": "Invalid caretaker ID"}, 400
 
@@ -342,6 +371,7 @@ def get_caretaker(caretaker_id):
         "phone": caretaker.get("phone", ""),
         "patient_id": caretaker.get("patient_id")
     }, 200
+
 
 def check_missed_medicines():
     now = datetime.now()
@@ -358,10 +388,12 @@ def check_missed_medicines():
     for medicine in medicines:
         result = medicines_collection.update_one(
             {"_id": medicine["_id"], "status": "scheduled"},
-            {"$set": {
-                "status": "missed",
-                "missed_at": now
-            }}
+            {
+                "$set": {
+                    "status": "missed",
+                    "missed_at": now
+                }
+            }
         )
 
         if result.modified_count == 1:
@@ -369,7 +401,9 @@ def check_missed_medicines():
                 f"Medicine missed: {medicine.get('medicine_name', 'Unknown')}"
             )
 
+
 scheduler = BackgroundScheduler()
+
 scheduler.add_job(
     func=check_missed_medicines,
     trigger="interval",
@@ -377,11 +411,14 @@ scheduler.add_job(
     id="medicine_checker",
     replace_existing=True
 )
+
 scheduler.start()
+
 
 if __name__ == "__main__":
     print("Smart Medicine Reminder Backend Started")
     print("Automatic 5-minute missed medicine checker is running")
+
     app.run(
         debug=True,
         host="127.0.0.1",
